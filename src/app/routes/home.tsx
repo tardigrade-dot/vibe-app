@@ -1,6 +1,5 @@
 import { useState } from 'react' // 导入 useState 用于状态管理
 import { invoke } from '@tauri-apps/api/core' // 导入 invoke 用于调用 Rust 后端
-import { useNavigate } from 'react-router-dom'
 import env from '@/config/env'
 import BuiltWith from '@/features/built-with'
 import GithubStarButton from '@/features/github-star-button'
@@ -16,8 +15,6 @@ export function HomePage() {
     const [result, setResult] = useState<number | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
-
-    // const navigate = useNavigate()
     /**
      * 异步调用 Rust 后端 add_method 命令
      */

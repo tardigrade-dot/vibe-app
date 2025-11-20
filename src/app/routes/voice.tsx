@@ -38,8 +38,9 @@ export function VoicePage() {
         try {
             if (!audioContextRef.current) {
                 audioContextRef.current = new (window.AudioContext ||
-                    window.webkitAudioContext)()
+                    (window as any).webkitAudioContext)()
             }
+
             const audioContext = audioContextRef.current
 
             // 1. 创建 AudioBuffer (单声道)
