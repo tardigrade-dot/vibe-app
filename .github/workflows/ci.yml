@@ -71,8 +71,7 @@ jobs:
 
             # 5. 打包 Tauri 应用
             - name: Build Tauri App
-              # 🌟 关键修正 1: 升级 Action 版本到 v2
-              uses: tauri-apps/tauri-action@v2
+              uses: tauri-apps/tauri-action@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
