@@ -19,6 +19,9 @@ jobs:
         name: ${{ matrix.platform.os }} (${{ matrix.platform.target }})
         runs-on: ${{ matrix.platform.os }}
 
+        permissions:
+            contents: write # 授予写入权限，允许上传 Release Assets
+
         strategy:
             fail-fast: false
             matrix:
