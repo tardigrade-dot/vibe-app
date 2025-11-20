@@ -1,0 +1,21 @@
+// .vscode/settings.json
+{
+    // ...
+    // 强制 Cargo 忽略二进制 targets
+    "rust-analyzer.check.allTargets": false,
+
+    // 告诉 Rust Analyzer 应该检查/测试哪些 targets，确保 lib target 被包含
+    "rust-analyzer.check.targets": [
+        "create-tauri-react" // 这会默认包含 lib 和 bin targets
+    ],
+
+    // 🌟 关键：覆盖测试参数，只运行 lib target 的测试
+    // 某些版本的 rust-analyzer 可能需要这个更复杂的配置来覆盖默认的 --bin 行为
+    "rust-analyzer.runnables.args": [
+        "test",
+        "--package",
+        "create-tauri-react",
+        "--lib", // 明确告诉 Cargo 只测试库
+        "--"
+    ]
+}

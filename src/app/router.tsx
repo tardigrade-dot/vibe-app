@@ -7,6 +7,10 @@ const createAppRouter = () =>
             lazy: () => import('@/app/routes/home')
         },
         {
+            path: '/voice',
+            lazy: () => import('@/app/routes/voice')
+        },
+        {
             path: '*',
             lazy: () => import('@/app/routes/not-found')
         }

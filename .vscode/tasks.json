@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "ui:dev",
+            "type": "shell",
+            // 运行您的前端开发命令
+            "command": "pnpm",
+            "args": [
+                "run",
+                "dev" // 确保这与您 package.json 中的 dev 脚本一致
+            ],
+            "isBackground": true, // 保持在后台运行
+            "group": "build",
+            // 定义何时认为任务已经启动完成
+            "problemMatcher": {
+                "pattern": [{ "regexp": "." }],
+                "background": {
+                    "activeOnStart": true,
+                    // 当 Vite/前端服务器输出 'Local:' 或 'ready' 等关键字时，认为它已准备好
+                    "beginsPattern": ".*(Local|ready).*",
+                    "endsPattern": ".*"
+                }
+            }
+        }
+    ]
+}

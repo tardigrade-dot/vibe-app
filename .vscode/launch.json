@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Tauri Development Debug",
+            "cargo": {
+                // 告诉 cargo 构建一个 Debug 版本
+                "args": [
+                    "build",
+                    "--manifest-path=./src-tauri/Cargo.toml",
+                    // 确保构建时包含调试信息
+                    "--profile",
+                    "dev"
+                ]
+            },
+            // 在启动调试前，先运行这个任务（启动前端 dev server）
+            "preLaunchTask": "ui:dev",
+            "args": []
+        }
+    ]
+}
