@@ -1,0 +1,79 @@
+# .github/workflows/ci.yml
+
+name: 'release: Build & Release'
+
+on:
+    push:
+        # 🌟 触发事件：当一个新的 Git Tag 被推送到 GitHub 时
+        tags:
+            - 'v*'
+
+env:
+    # 环境变量：确保 Rust 和 Node.js 的版本一致性
+    RUST_TOOLCHAIN: stable
+    NODE_VERSION: '20'
+
+jobs:
+    build-tauri:
+        # 任务名称和运行平台
+        name: ${{ matrix.platform.os }} (${{ matrix.platform.target }})
+        runs-on: ${{ matrix.platform.os }}
+
+        strategy:
+            fail-fast: false
+            matrix:
+                # 🌟 定义要打包的目标平台
+                platform:
+                    - os: ubuntu-latest
+                      target: ${{ (github.event.inputs.skip_linux == 'true' && '') || 'x86_64-unknown-linux-gnu' }}
+                      # macOS 和 Windows 推荐使用默认的 target，Tauri 会自动处理
+                    - os: macos-latest
+                    - os: windows-latest
+
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  submodules: true
+
+            # 1. 安装 Node.js 和 Rust
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: 'pnpm'
+
+            - name: Install Rust
+              uses: dtolnay/rust-toolchain@master
+              with:
+                  toolchain: ${{ env.RUST_TOOLCHAIN }}
+                  targets: ${{ matrix.platform.target }}
+
+            # 2. 安装系统依赖 (Linux 需要)
+            - name: Install Dependencies (Linux)
+              if: runner.os == 'Linux'
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev libvips
+
+            # 3. 安装前端依赖
+            - name: Install Frontend Dependencies
+              run: pnpm install --frozen-lockfile
+
+            # 4. 构建前端 (执行 pnpm build)
+            - name: Build Frontend
+              run: pnpm build
+
+            # 5. 打包 Tauri 应用
+            - name: Build Tauri App
+              uses: tauri-apps/tauri-action@v0
+              env:
+                  # 🌟 必须设置 GitHub Token，以便 Action 可以创建 Release
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  command: cargo tauri build
+                  # 将 Git Tag 作为版本号
+                  releaseTag: ${{ github.ref_name }}
+                  releaseName: 'App Release ${{ github.ref_name }}'
+                  releaseBody: 'See the assets to download this version.'
+                  includeDebug: false
+                  args: ${{ matrix.platform.target && format('--target {0}', matrix.platform.target) || '' }}
