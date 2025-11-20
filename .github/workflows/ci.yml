@@ -71,20 +71,16 @@ jobs:
 
             # 5. 打包 Tauri 应用
             - name: Build Tauri App
-              uses: tauri-apps/tauri-action@v1
+              # 🌟 关键修正 1: 确保使用 v0
+              uses: tauri-apps/tauri-action@v0
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                  # 🌟 关键修正 2: 移除 'command' (在 v2 中不再需要)
-                  # 🌟 关键修正 3: 将 'releaseTag' 替换为 'tagName'
                   tagName: ${{ github.ref_name }}
 
-                  # 保持 Release 命名一致
                   releaseName: 'App Release ${{ github.ref_name }}'
                   releaseBody: 'See the assets to download this version.'
 
                   includeDebug: false
 
-                  # 4. 关键：将构建命令和参数放入 'args' 中
-                  # tauri-action v2 会在内部执行 'cargo tauri build'
                   args: ${{ matrix.platform.target && format('--target {0}', matrix.platform.target) || '' }}
