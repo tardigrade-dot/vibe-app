@@ -40,7 +40,14 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ env.NODE_VERSION }}
+                  # 🌟 这里设置了 cache: 'pnpm'，但没有安装 pnpm 本身
                   cache: 'pnpm'
+
+            # 🌟 关键修正：添加安装 pnpm 的步骤
+            - name: Install pnpm
+              run: npm install -g pnpm
+              # 或者如果使用 Corepack (Node v16.13+):
+              # run: corepack enable
 
             - name: Install Rust
               uses: dtolnay/rust-toolchain@master
