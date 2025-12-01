@@ -23,7 +23,7 @@ ort = { version = "2.0.0-rc.7", features = ["coreml"] }
 # Array processing (like NumPy)
 ndarray = { version = "0.16", features = ["rayon"] }
 rand = "0.8"
-rand_distr = "0.4"
+rand_distr = "0.5"
 
 # Parallel processing
 rayon = "1.10"
